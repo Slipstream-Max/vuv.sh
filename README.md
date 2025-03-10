@@ -1,4 +1,4 @@
-# vuv
+# VUV
 Easier use of package manager uv in the form of conda.<br>And this only need is uv.
 
 # First of All
@@ -19,8 +19,18 @@ Just restart your terminal. I've tested it on:
 - bash(Linux)
 - zsh(Linux)
 
-Or you can download the `vuv` file separately and add `source vuv` to your terminal configuration
+Or you can download the `vuv` file separately and add `source /path/to/vuv` `export VUV_VENV=/path/to/venvs` to your terminal configuration.
+
+You can modify
+
+VUV_VENV:path to venv
+
+VUV_DIR:path to vuv file
+
+in install.sh to choose different install location.
+
 ## Use
+![use in terminal](./img/use_in_terminal.png)
 
 ### Create a virtual environment named fastapi with Python version 3.10
 
@@ -43,10 +53,15 @@ vuv deactivate
 vuv remove -n fastapi
 ```
 
-For more details you can refer to `uvv help`.
+### List all vuv enviroment
+```bash
+vuv list
+```
+
+For more details you can refer to `vuv help`.
 
 ### Use in VSCode
 
-Just specify the location, e.g. the environment location for this is at `/home/menghuan_go/.venv/fastapi/bin/python`.
+Ctrl+, open Settings search python.venvFolders click Add Item and input VUV_VENV path.
+![vsc integrate](./img/use_in_vsc.png)
 
-![image](https://github.com/Menghuan1918/uvv/assets/122662527/242145a8-d19b-4445-b5a4-f2ded74d4c34)
