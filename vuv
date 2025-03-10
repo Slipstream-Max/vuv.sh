@@ -7,6 +7,25 @@ vuv_check() {
     fi
 }
 
+vuv_set_default_index() {
+    if [ -z "$1" ]; then
+        echo "Usage: vuv config --default-index <index_url>" >&2
+        return 1
+    fi
+
+    if [ -f "$VUV_CONFIG" ]; then
+        if grep -q "^export DEFAULT_INDEX=" "$VUV_CONFIG"; then
+            sed -i "s|^export DEFAULT_INDEX=.*|export DEFAULT_INDEX=$1|" "$VUV_CONFIG"
+        else
+            echo "export DEFAULT_INDEX=$1" >> "$VUV_CONFIG"
+        fi
+    else
+        echo "export DEFAULT_INDEX=$1" > "$VUV_CONFIG"
+    fi
+
+    echo "Default index set to: $1"
+}
+
 vuv_create() {
     while getopts ":n:p:" opt; do
         case $opt in
@@ -124,6 +143,7 @@ vuv_help() {
     echo "  activate <uv_environment>"
     echo "  install <package>"
     echo "  deactivate"
+    echo "  config --default-index <index_url>"
 }
 
 vuv() {
@@ -150,6 +170,20 @@ vuv() {
             ;;
         deactivate)
             vuv_deactivate
+            ;;
+        config)
+            shift
+            case "$1" in
+                --default-index)
+                    shift
+                    vuv_set_default_index "$@"
+                    ;;
+                *)
+                    echo "Unsupported config option: $1" >&2
+                    echo "Run 'vuv help' for usage" >&2
+                    return 1
+                    ;;
+            esac
             ;;
         help)
             vuv_help

@@ -60,6 +60,11 @@ vuv remove -n fastapi
 vuv list
 ```
 
+### Set default pypi index
+```bash
+vuv config --default-index https://pypi.tuna.tsinghua.edu.cn/simple
+```
+
 For more details you can refer to `vuv help`.
 
 ### Use in VSCode
