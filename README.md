@@ -1,5 +1,7 @@
 # VUV
-Easier use of package manager uv in the form of conda.<br>And this only need is uv.
+Easier use of package manager uv in the form of conda.
+
+Unlike [uvv](https://github.com/Menghuan1918/uvv).This repo ONLY need is uv.
 
 # First of All
 Thanks [Menghuan1918](https://github.com/Menghuan1918) create awsome shell script.
@@ -62,6 +64,10 @@ For more details you can refer to `vuv help`.
 
 ### Use in VSCode
 
-Ctrl+, open Settings search python.venvFolders click Add Item and input VUV_VENV path.
+`Ctrl+,` open Settings.
+
+Search `python.venvFolders`.
+
+Click `Add Item` and input `VUV_VENV` path.
 ![vsc integrate](./img/use_in_vsc.png)
 
