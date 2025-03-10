@@ -1,4 +1,4 @@
-# VUV
+# vuv
 Easier use of package manager uv in the form of conda.
 
 Unlike [uvv](https://github.com/Menghuan1918/uvv).This repo ONLY need is uv.
