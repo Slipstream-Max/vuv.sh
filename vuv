@@ -59,18 +59,15 @@ vuv_create() {
 
 vuv_remove() {
     local uv_environment
-    while getopts ":n:" opt; do
-        case $opt in
-            n) uv_environment="$OPTARG"
-            ;;
-            \?) echo "Invalid option -$OPTARG" >&2
-                return 1
-            ;;
-        esac
-    done
-
-    if [ -z "$uv_environment" ]; then
-        echo "Usage: vuv remove -n <uv_environment>"
+    # 手动解析参数
+    if [[ "$1" == "-n" ]]; then
+        if [[ -z "$2" ]]; then
+            echo "Error: -n requires an argument (environment name)" >&2
+            return 1
+        fi
+        uv_environment="$2"
+    else
+        echo "Usage: vuv remove -n <uv_environment>" >&2
         return 1
     fi
 
@@ -78,7 +75,11 @@ vuv_remove() {
         echo "uv environment $uv_environment does not exist"
         return 1
     fi
-    vuv_deactivate
+
+    if [[ "$VIRTUAL_ENV" == "$VUV_VENV/$uv_environment" ]]; then
+        vuv_deactivate
+    fi
+
     echo "Removing uv environment: $uv_environment"
     rm -rf "$VUV_VENV/$uv_environment"
     echo "uv environment $uv_environment removed"
