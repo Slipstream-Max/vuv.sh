@@ -58,6 +58,7 @@ vuv_create() {
 }
 
 vuv_remove() {
+    local uv_environment
     while getopts ":n:" opt; do
         case $opt in
             n) uv_environment="$OPTARG"
