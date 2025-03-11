@@ -51,7 +51,7 @@ vuv_create() {
 
     echo "Creating uv environment: $uv_environment with Python $python_version"
     mkdir -p "$VUV_VENV" || return 1
-    uv venv "$VUV_VENV/$uv_environment" --python "$python_version" || return 1
+    uv venv "$VUV_VENV/$uv_environment" --python "$python_version" --seed || return 1
 
     echo "Environment setup complete for uv environment: $uv_environment with Python $python_version"
     echo "Run 'vuv activate $uv_environment' to activate the environment"
