@@ -27,6 +27,9 @@ vuv_set_default_index() {
 }
 
 vuv_create() {
+    local uv_environment
+    local python_version
+    OPTIND=1
     while getopts ":n:p:" opt; do
         case $opt in
             n) uv_environment="$OPTARG"
@@ -39,19 +42,20 @@ vuv_create() {
         esac
     done
 
-    if [ -d "$VUV_VENV/$uv_environment" ]; then
-        echo "uv environment $uv_environment already exists"
-        return 1
-    fi
 
     if [ -z "$uv_environment" ] || [ -z "$python_version" ]; then
         echo "Usage: vuv create -n <uv_environment> -p <python_version>"
         return 1
     fi
 
+    if [ -d "$VUV_VENV/$uv_environment" ]; then
+        echo "uv environment $uv_environment already exists"
+        return 1
+    fi
+
     echo "Creating uv environment: $uv_environment with Python $python_version"
     mkdir -p "$VUV_VENV" || return 1
-    uv venv "$VUV_VENV/$uv_environment" --python "$python_version" --seed || return 1
+    uv venv "$VUV_VENV/$uv_environment" --python "$python_version" || return 1
 
     echo "Environment setup complete for uv environment: $uv_environment with Python $python_version"
     echo "Run 'vuv activate $uv_environment' to activate the environment"
@@ -59,15 +63,20 @@ vuv_create() {
 
 vuv_remove() {
     local uv_environment
-    # 手动解析参数
-    if [[ "$1" == "-n" ]]; then
-        if [[ -z "$2" ]]; then
-            echo "Error: -n requires an argument (environment name)" >&2
-            return 1
-        fi
-        uv_environment="$2"
-    else
-        echo "Usage: vuv remove -n <uv_environment>" >&2
+    OPTIND=1
+    while getopts ":n:" opt; do
+        case $opt in
+            n) uv_environment="$OPTARG"
+            ;;
+            \?) echo "Invalid option -$OPTARG" >&2
+                return 1
+            ;;
+        esac
+    done
+
+
+    if [ -z "$uv_environment" ]; then
+        echo "Usage: vuv remove -n <uv_environment>"
         return 1
     fi
 
@@ -75,11 +84,7 @@ vuv_remove() {
         echo "uv environment $uv_environment does not exist"
         return 1
     fi
-
-    if [[ "$VIRTUAL_ENV" == "$VUV_VENV/$uv_environment" ]]; then
-        vuv_deactivate
-    fi
-
+    vuv_deactivate
     echo "Removing uv environment: $uv_environment"
     rm -rf "$VUV_VENV/$uv_environment"
     echo "uv environment $uv_environment removed"
@@ -136,6 +141,14 @@ vuv_install() {
     uv pip install "$@"
 }
 
+vuv_uninstall() {
+    if [ -z "$VIRTUAL_ENV" ]; then
+        echo "No uv environment is currently activated"
+        return 1
+    fi
+    uv pip uninstall "$@"
+}
+
 vuv_help() {
     echo "Usage: vuv <command> [<args>]"
     echo "Commands:"
@@ -170,6 +183,10 @@ vuv() {
             shift
             vuv_install "$@"
             ;;
+	uninstall)
+	    shift
+	    vuv_uninstall "$@"
+	    ;;
         deactivate)
             vuv_deactivate
             ;;
