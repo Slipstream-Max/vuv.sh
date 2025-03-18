@@ -29,6 +29,8 @@ VUV_VENV:path to venv
 
 VUV_DIR:path to vuv file
 
+VUV_CONFIG:path to vuv config file (store index url for now)
+
 in install.sh to choose different install location.
 
 ## Use
@@ -58,6 +60,16 @@ vuv remove -n fastapi
 ### List all vuv enviroment
 ```bash
 vuv list
+```
+
+### Install package to current env
+```bash
+vuv install torch
+```
+
+### Uninstall package from current env
+```bash
+vuv uninstall torch
 ```
 
 ### Set default pypi index
